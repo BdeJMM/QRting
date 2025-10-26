@@ -1,3 +1,5 @@
+package com.example.qrting.data
+
 import kotlinx.coroutines.flow.Flow
 
 // The repository is a normal class that takes the DAO as a parameter.

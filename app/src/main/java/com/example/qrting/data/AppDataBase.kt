@@ -1,3 +1,5 @@
+package com.example.qrting.data
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -28,4 +30,4 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-} // The extra brace has been removed.
+}

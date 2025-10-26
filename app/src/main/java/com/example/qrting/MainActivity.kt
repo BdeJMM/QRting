@@ -1,3 +1,5 @@
+package com.example.qrting
+
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,14 +14,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.qrting.data.AppDatabase
 import com.example.qrting.data.HistoryRepository
 import com.example.qrting.ui.Scanner.ScannerScreen
@@ -28,57 +27,52 @@ import com.example.qrting.ui.history.HistoryScreen
 import com.example.qrting.ui.history.HistoryVM
 import com.example.qrting.ui.theme.QRtingTheme
 
-// Contenido final y corregido para: MainActivity.kt
 class MainActivity : ComponentActivity() {
+
+    // Define the factory as a lazy property to be created once.
+    private val viewModelFactory by lazy {
+        val database = AppDatabase.getDatabase(this)
+        val repository = HistoryRepository(database.urlHistoryDao())
+        ViewModelFactory(application, repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Creamos una única instancia de la base de datos y el repositorio para toda la app.
-        val database by lazy { AppDatabase.getDatabase(this) }
-        val repository by lazy { HistoryRepository(database.urlHistoryDao()) }
 
         enableEdgeToEdge()
         setContent {
             QRtingTheme {
-                // Le pasamos el repositorio a nuestra pantalla principal.
-                MainAppScreen(repository = repository)
+                // Pass the factory to the main screen.
+                MainAppScreen(factory = viewModelFactory)
             }
         }
     }
 }
 
-// Esta clase especial le enseña a la app cómo crear nuestros VMs,
-// ya que ahora necesitan el 'repository' para funcionar.
+// A simpler, correct ViewModelFactory.
+// It doesn't need a companion object or access to composable contexts.
 class ViewModelFactory(
     private val application: Application,
     private val repository: HistoryRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
-            // Cuando se pida un ScannerVM...
             modelClass.isAssignableFrom(ScannerVM::class.java) -> {
-                // ...lo creamos pasándole la 'application' y el 'repository'.
+                @Suppress("UNCHECKED_CAST")
                 ScannerVM(application, repository) as T
             }
-            // Cuando se pida un HistoryVM...
             modelClass.isAssignableFrom(HistoryVM::class.java) -> {
-                // ...lo creamos pasándole el 'repository'.
+                @Suppress("UNCHECKED_CAST")
                 HistoryVM(repository) as T
             }
-
-            else -> throw IllegalArgumentException("Unknown ViewModel class")
+            else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }
 }
 
 @Composable
-fun MainAppScreen(repository: HistoryRepository) {
-    val navController = androidx.navigation.compose.rememberNavController()
-
-    // Obtenemos el contexto de la aplicación para pasárselo a la Factory.
-    val context = LocalContext.current.applicationContext as Application
-    // Creamos una instancia de nuestra Factory.
-    val viewModelFactory = ViewModelFactory(context, repository)
+fun MainAppScreen(factory: ViewModelProvider.Factory) { // Receive the factory
+    val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
@@ -86,10 +80,9 @@ fun MainAppScreen(repository: HistoryRepository) {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            // Conectamos las pantallas reales y los VMs.
             NavigationHost(
                 navController = navController,
-                viewModelFactory = viewModelFactory // Le pasamos la factory al navegador.
+                factory = factory // Pass the factory down
             )
         }
     }
@@ -98,23 +91,20 @@ fun MainAppScreen(repository: HistoryRepository) {
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    viewModelFactory: ViewModelProvider.Factory // Recibe la factory.
+    factory: ViewModelProvider.Factory // Receive the factory
 ) {
-    androidx.navigation.NavHost(
+    NavHost(
         navController = navController,
         startDestination = "scanner"
     ) {
         composable("scanner") {
-            // Usamos viewModel() para obtener una instancia del ScannerVM.
-            // La factory que creamos le enseñará cómo construirlo.
-            val scannerVM: ScannerVM = viewModel(factory = viewModelFactory)
-            // ¡Mostramos la pantalla real del escáner!
+            // Use the factory to create the ViewModel instance.
+            val scannerVM: ScannerVM = viewModel(factory = factory)
             ScannerScreen(viewModel = scannerVM)
         }
         composable("history") {
-            // Hacemos lo mismo para el HistoryVM.
-            val historyVM: HistoryVM = viewModel(factory = viewModelFactory)
-            // ¡Mostramos la pantalla real del historial!
+            // Use the same factory for the HistoryVM.
+            val historyVM: HistoryVM = viewModel(factory = factory)
             HistoryScreen(viewModel = historyVM)
         }
     }
@@ -133,8 +123,11 @@ fun BottomNavigationBar(navController: NavHostController) {
             onClick = {
                 if (currentRoute != "scanner") {
                     navController.navigate("scanner") {
-                        popUpTo(navController.graph.startDestinationId)
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
                         launchSingleTop = true
+                        restoreState = true
                     }
                 }
             }
@@ -146,8 +139,11 @@ fun BottomNavigationBar(navController: NavHostController) {
             onClick = {
                 if (currentRoute != "history") {
                     navController.navigate("history") {
-                        popUpTo(navController.graph.startDestinationId)
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
                         launchSingleTop = true
+                        restoreState = true
                     }
                 }
             }

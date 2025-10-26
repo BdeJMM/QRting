@@ -1,13 +1,18 @@
 package com.example.qrting.data
 
-// Make sure you have this import
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "url_history_table") // The tableName is optional but good practice
+// Le dice a Room que esta es una tabla en la base de datos.
+@Entity(tableName = "url_history")
 data class UrlHistory(
+    // ¡AÑADIDO! Esta es la clave primaria que Room necesita.
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+
+    // Columna para guardar la URL.
     val url: String,
-    val timestamp: Long
+
+    // Columna para guardar la fecha y hora.
+    val timestamp: Long = System.currentTimeMillis()
 )
