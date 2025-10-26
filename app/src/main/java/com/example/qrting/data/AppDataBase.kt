@@ -1,11 +1,9 @@
-package com.example.qrting.data
-
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-class AppDataBase// Define la base de datos, sus tablas (entities) y su versión.
+// Define la base de datos, sus tablas (entities) y su versión.
 @Database(entities = [UrlHistory::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -30,5 +28,4 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-} {
-}
+} // The extra brace has been removed.
