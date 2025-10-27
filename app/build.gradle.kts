@@ -101,6 +101,8 @@ dependencies {
 
     // Navigation Component para navegar entre pantallas con Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
-} // <-- ESTA ES LA LLAVE QUE FALTABA
 
-// El final del archivo debería estar aquí, la línea 102 estaba vacía por error.
+    // ExoPlayer para el vídeo de fondo
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+}
