@@ -32,12 +32,13 @@ android {
         }
     }
     compileOptions {
-        // La versión 1.8 de Java es el estándar más compatible para Android actualmente
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        // ACTUALIZADO: Cambiamos a Java 17 para compatibilidad con librerías modernas
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        // ACTUALIZADO: El objetivo de la JVM también debe ser 17
+        jvmTarget = "17"
     }
     buildFeatures {
         // Habilitamos Jetpack Compose
@@ -66,7 +67,17 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    
+    // --- TEST UNITARIOS ---
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    // Librerías de Mockito
+    testImplementation("org.mockito:mockito-core:5.7.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    // Librería para probar LiveData
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))

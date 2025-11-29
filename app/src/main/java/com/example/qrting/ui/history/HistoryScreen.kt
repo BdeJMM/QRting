@@ -20,25 +20,26 @@ import com.example.qrting.viewmodel.HistoryVM
 import java.text.SimpleDateFormat
 import java.util.*
 
-// Contenido para: ui/history/HistoryScreen.kt
-// La pantalla del historial. Recibe el HistoryVM.
+// La pantalla principal (Con estado): Habla con el ViewModel
 @Composable
-fun HistoryScreen(viewModel: HistoryVM) { // <-- ¡Importante! Usamos HistoryVM aquí.
-    // Observa los datos del VM. La UI se actualiza sola cuando los datos cambian.
+fun HistoryScreen(viewModel: HistoryVM) { 
     val historyList by viewModel.urlHistory.observeAsState(initial = emptyList())
+    // Llama a la versión "tonta" que solo pinta datos
+    HistoryList(historyList = historyList)
+}
 
-    // LazyColumn es una lista eficiente.
+// La lista visual (Sin estado): Ideal para probar porque solo pide una lista.
+@Composable
+fun HistoryList(historyList: List<UrlHistory>) {
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
-        // Crea un HistoryItem para cada elemento en la lista.
         items(items = historyList) { urlHistory ->
             HistoryItem(urlHistory = urlHistory)
         }
     }
 }
 
-// Composable para un solo elemento de la lista.
 @Composable
 fun HistoryItem(urlHistory: UrlHistory) {
     Card(
@@ -50,14 +51,12 @@ fun HistoryItem(urlHistory: UrlHistory) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Muestra la URL
             Text(
                 text = urlHistory.url,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
 
-            // Muestra la fecha formateada
             Text(
                 text = formatTimestamp(urlHistory.timestamp),
                 fontSize = 12.sp
@@ -66,7 +65,6 @@ fun HistoryItem(urlHistory: UrlHistory) {
     }
 }
 
-// Función para convertir milisegundos a una fecha legible.
 private fun formatTimestamp(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
     return sdf.format(Date(timestamp))
