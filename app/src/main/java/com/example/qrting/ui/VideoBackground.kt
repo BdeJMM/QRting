@@ -14,6 +14,7 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.example.qrting.R
 
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun VideoBackground(modifier: Modifier = Modifier) {
     val context = LocalContext.current
