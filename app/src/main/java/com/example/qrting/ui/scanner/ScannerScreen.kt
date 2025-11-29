@@ -154,6 +154,8 @@ fun PermissionDeniedContent(context: Context) {
     }
 }
 
+// AGREGADO: Esta anotación permite usar imageProxy.image sin error.
+@androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 private fun setupCamera(
     context: Context,
     previewView: PreviewView,
