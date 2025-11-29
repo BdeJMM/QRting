@@ -24,7 +24,7 @@ fun VideoBackground(modifier: Modifier = Modifier) {
             prepare()
             playWhenReady = true
             repeatMode = Player.REPEAT_MODE_ONE // Loop the video
-            volume = 0f // Mute the video
+            volume = 1f // Video con sonido (1f es el 100%)
         }
     }
 
