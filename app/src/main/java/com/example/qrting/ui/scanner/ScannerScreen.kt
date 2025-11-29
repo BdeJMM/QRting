@@ -1,4 +1,4 @@
-package com.example.qrting.ui.Scanner
+package com.example.qrting.ui.scanner
 
 import android.Manifest
 import android.content.Context
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.example.qrting.viewmodel.ScannerVM
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -102,7 +103,7 @@ fun ScannerScreen(viewModel: ScannerVM) {
 @Composable
 fun CameraPreview(viewModel: ScannerVM) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
+    // Eliminada la variable 'context' que no se usaba aquí
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
 
     AndroidView(

@@ -1,5 +1,7 @@
-package com.example.qrting.data
+package com.example.qrting.repository
 
+import com.example.qrting.data.UrlHistory
+import com.example.qrting.data.UrlHistoryDao
 import kotlinx.coroutines.flow.Flow
 
 // The repository is a normal class that takes the DAO as a parameter.

@@ -22,12 +22,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.qrting.data.AppDatabase
-import com.example.qrting.data.HistoryRepository
-import com.example.qrting.ui.Scanner.ScannerScreen
-import com.example.qrting.ui.Scanner.ScannerVM
+import com.example.qrting.repository.HistoryRepository
+import com.example.qrting.ui.scanner.ScannerScreen
+import com.example.qrting.viewmodel.ScannerVM
 import com.example.qrting.ui.VideoBackground
 import com.example.qrting.ui.history.HistoryScreen
-import com.example.qrting.ui.history.HistoryVM
+import com.example.qrting.viewmodel.HistoryVM
 import com.example.qrting.ui.theme.QRtingTheme
 
 class MainActivity : ComponentActivity() {

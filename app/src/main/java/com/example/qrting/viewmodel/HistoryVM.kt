@@ -1,11 +1,10 @@
-// Contenido corregido para: HistoryVM.kt
-package com.example.qrting.ui.history
+package com.example.qrting.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.qrting.data.HistoryRepository
 import com.example.qrting.data.UrlHistory
+import com.example.qrting.repository.HistoryRepository
 
 // Usamos el nombre de clase HistoryVM que preferiste.
 class HistoryVM(repository: HistoryRepository) : ViewModel() {
